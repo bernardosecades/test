@@ -1,0 +1,25 @@
+{
+  "name": "bernardosecades/test",
+  "description": "Test",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "bernardosecades",
+      "email": "bernardosecades@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "BernardoSecades\\Test\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.3"
+  }
+}
