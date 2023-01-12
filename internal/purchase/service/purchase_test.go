@@ -24,7 +24,7 @@ func TestErrorInvalidUUID(t *testing.T) {
 		Available: true,
 	}
 
-	mock.ShouldGetProduct(ctx, uuid, product, 0)
+	mock.ShouldGetProduct(ctx, uuid, &product, 0)
 	mock.ShouldSetToNoAvailable(ctx, uuid, 0)
 
 	// Execute
@@ -45,7 +45,7 @@ func TestErrorProductNoAvailable(t *testing.T) {
 		Available: false,
 	}
 
-	mock.ShouldGetProduct(ctx, uuid, product, 1)
+	mock.ShouldGetProduct(ctx, uuid, &product, 1)
 	mock.ShouldSetToNoAvailable(ctx, uuid, 0)
 
 	// Execute
@@ -66,7 +66,7 @@ func TestSuccessMakePurchase(t *testing.T) {
 		Available: true,
 	}
 
-	mock.ShouldGetProduct(ctx, uuid, product, 1)
+	mock.ShouldGetProduct(ctx, uuid, &product, 1)
 	mock.ShouldSetToNoAvailable(ctx, uuid, 1)
 
 	// Execute
@@ -79,9 +79,9 @@ type purchaseRepositoryMock struct {
 	mock.Mock
 }
 
-func (m *purchaseRepositoryMock) GetProduct(ctx context.Context, ID string) (entity.Product, error) {
+func (m *purchaseRepositoryMock) GetProduct(ctx context.Context, ID string) (*entity.Product, error) {
 	args := m.Called(ctx, ID)
-	return args.Get(0).(entity.Product), args.Error(1)
+	return args.Get(0).(*entity.Product), args.Error(1)
 }
 
 func (m *purchaseRepositoryMock) SetToNoAvailable(ctx context.Context, ID string) error {
@@ -89,7 +89,7 @@ func (m *purchaseRepositoryMock) SetToNoAvailable(ctx context.Context, ID string
 	return args.Error(0)
 }
 
-func (m *purchaseRepositoryMock) ShouldGetProduct(ctx context.Context, ID string, product entity.Product, times int) {
+func (m *purchaseRepositoryMock) ShouldGetProduct(ctx context.Context, ID string, product *entity.Product, times int) {
 	m.
 		On("GetProduct", ctx, ID).
 		Times(times).
