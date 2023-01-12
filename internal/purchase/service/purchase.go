@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/bernardosecades/test/internal/kit/uuid"
 
 	"github.com/bernardosecades/test/internal/purchase/entity"
-	"github.com/bernardosecades/test/internal/uuid"
 )
 
 var (
@@ -14,12 +14,14 @@ var (
 	ErrInvalidID = errors.New("is not a valid UUID")
 	// ErrProductNoAvailable used when the product is not available
 	ErrProductNoAvailable = errors.New("product no available")
+	// ErrProductNotFound used when the product does not exist in database
+	ErrProductNotFound = errors.New("product not found")
 )
 
 // PurchaseRepository interface determine which method should
 // be implemented in order to suit the purchase service
 type PurchaseRepository interface {
-	GetProduct(ctx context.Context, ID string) (entity.Product, error)
+	GetProduct(ctx context.Context, ID string) (*entity.Product, error)
 	SetToNoAvailable(ctx context.Context, ID string) error
 }
 
@@ -43,6 +45,10 @@ func (p Purchase) Make(ctx context.Context, ID string) error {
 	product, err := p.purchaseRepository.GetProduct(ctx, ID)
 	if err != nil {
 		return err
+	}
+
+	if product == nil {
+		return fmt.Errorf("id: '%s' %w", ID, ErrProductNotFound)
 	}
 
 	if !product.Available {

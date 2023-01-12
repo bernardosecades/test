@@ -39,18 +39,21 @@ func NewMySQLPurchaseRepository(dbName string, dbUser string, dbPass string, dbH
 	return MySQLPurchaseRepository{SQL: d}
 }
 
-func (r *MySQLPurchaseRepository) GetProduct(ctx context.Context, ID string) (entity.Product, error) {
-
+func (r *MySQLPurchaseRepository) GetProduct(ctx context.Context, ID string) (*entity.Product, error) {
 	res := r.SQL.QueryRowContext(ctx, "SELECT *  FROM product WHERE id = ? FOR UPDATE", ID)
 
 	var product entity.Product
 	err := res.Scan(&product.ID, &product.Available, &product.CreatedAt, &product.UpdatedAt)
 
-	if err != nil {
-		return entity.Product{}, err
+	if err != nil &&  err != sql.ErrNoRows {
+		return nil, err
 	}
 
-	return product, nil
+	if len(product.ID) == 0 {
+		return nil, nil
+	}
+
+	return &product, nil
 }
 
 func (r *MySQLPurchaseRepository) SetToNoAvailable(ctx context.Context, ID string) error {

@@ -19,8 +19,6 @@ COPY go.mod go.sum ./
 COPY . .
 # Build the Go app
 
-RUN ls -la $GOPATH/src/github.com/bernardosecades/test/cmd/api > /tmp/PEPE.txt
-
 # -ldflags="-w -s" reduce size of binary
 RUN cd $GOPATH/src/github.com/bernardosecades/test/cmd/api && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /bin/api .
 
@@ -32,7 +30,6 @@ EXPOSE 3333
 
 # Command to run the executable
 ENTRYPOINT ["/bin/api"]
-
 
 
 # STEP 2: Build a small image

@@ -6,6 +6,7 @@ package purchase
 import (
 	"context"
 	"database/sql"
+	"github.com/bernardosecades/test/internal/kit/test"
 	"log"
 	"net"
 	"os"
@@ -13,7 +14,6 @@ import (
 
 	"github.com/bernardosecades/test/internal/purchase/repository/mysql"
 	"github.com/bernardosecades/test/internal/purchase/service"
-	"github.com/bernardosecades/test/internal/testtools"
 	"github.com/bernardosecades/test/proto/go/protobuf/api"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
@@ -58,7 +58,7 @@ func TestMain(m *testing.M) {
 	loadFixtures()
 	exitVal := m.Run()
 
-	testtools.TruncateTables(clientDB, getTablesToTruncateOnFinish())
+	test.TruncateTables(clientDB, getTablesToTruncateOnFinish())
 	teardown()
 	os.Exit(exitVal)
 }
@@ -113,7 +113,7 @@ func getTablesToTruncateOnFinish() []string {
 }
 
 func teardown() {
-	testtools.CloseDB(clientDB)
+	test.CloseDB(clientDB)
 }
 
 func loadFixtures() {
@@ -124,11 +124,11 @@ func loadFixtures() {
 		('1d6f0039-a9a7-4092-9241-f49a9bc0bb03', 0 , '2023-01-02 15:20:44', '2023-01-02 15:20:44');`,
 	}
 
-	testtools.LoadFixtures(clientDB, queries)
+	test.LoadFixtures(clientDB, queries)
 }
 
 func getDBConnection() *sql.DB {
-	return testtools.OpenDB(
+	return test.OpenDB(
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASS"),
 		os.Getenv("DB_HOST"),
