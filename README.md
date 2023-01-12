@@ -1,6 +1,9 @@
-# Test
+# Purchase Test
 
-## Docker
+[![CI Tests](https://github.com/bernardosecades/test/actions/workflows/test.yml/badge.svg)](https://github.com/bernardosecades/test/actions/workflows/test.yml)
+
+
+# Run project in your local
 
 `docker-compose up`
 
