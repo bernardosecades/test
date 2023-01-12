@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package api;
+
+service PurchaseService {
+  rpc Purchase (PurchaseRequest) returns (PurchaseResponse) {}
+}
+
+message PurchaseRequest {
+  string id = 1;
+}
+
+message PurchaseResponse {
+  bool   success = 1;
+  string error = 2;
+}

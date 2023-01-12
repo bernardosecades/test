@@ -1,0 +1,31 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: bernie
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATABASE: shop
+
+    volumes:
+      - "./platform/local/schema.sql:/docker-entrypoint-initdb.d/schema.sql"
+  service:
+    build:
+      context: .
+      target: builder # it'll use the same Dockerfile as prod, but stop at the builder stage to can execute go test
+      dockerfile: .docker/api/Dockerfile
+    environment:
+      DB_NAME: shop
+      DB_USER: bernie
+      DB_PASS: 1234
+      DB_HOST: mysql
+      DB_PORT: 3306
+      GRPC_PORT: 3333
+    restart: always
+    ports:
+      - 3333:3333
+    links:
+      - mysql
